@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
-import './Cell.css';
 
 export default class Cell extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            color: 'purple'
+            style: {
+                backgroundColor: 'purple',
+                borderRight: '1px solid white',
+                borderBottom: '1px solid white'
+            }
         }
     }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.gem !== {} ? true : false;
+    }
+
+    componentDidMount() {
+        if (this.props.gem) {
+            let { style } = this.state;
+            style = { ...style, backgroundColor: this.props.gem.color }
+            this.setState({ style });
+        }
+    }
+
     render() {
         return (
-            <div className="grid-cell">
+            <div style={this.state.style}>
             </div>
         )
     }

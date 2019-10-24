@@ -5,6 +5,7 @@ import { ROW, COL } from '../../utils/dimensions';
 import Cell from './Cell/Cell';
 import GameStatus from './GameStatus/GameStatus';
 import { gems } from '../../utils/gems';
+import { compareObject } from '../../utils/helperMethods';
 
 class Game extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class Game extends Component {
         // updates the gameEnds in state
     }
 
-    repaintGrid() { // pass updated state variable
+    repaintGrid(changedGrid) { // pass updated state variable
         let { grid } = this.state;
         for (let row = 0; row < ROW; row++) {
             for (let col = 0; col < COL; col++) {
@@ -44,13 +45,21 @@ class Game extends Component {
     getRandomCell() {
         // to place gem into randomly selected cell
         return {
-            row: (Math.random() * ROW),
-            col: (Math.random() * COL)
+            row: Math.floor(Math.random() * ROW),
+            col: Math.floor(Math.random() * COL)
         }
     }
 
     placeGemOnGrid() {
         // select gem from objects
+        const { grid } = this.state;
+        const gemsArray = Object.keys(gems);
+        const randomGemIndex = Math.floor(Object.keys(gems).length * Math.random());
+        const randomGem = gems[gemsArray[randomGemIndex]];
+        const randomCell = this.getRandomCell();
+        const randomCellId = grid.findIndex((element) => compareObject(randomCell, element));
+        grid[randomCellId] = { ...grid[randomCellId], randomGem };
+        this.setState({ grid: grid });
     }
 
     updateSnakeDirection() {
@@ -62,6 +71,7 @@ class Game extends Component {
         // set game timers here
         // add event listeners to window here
         this.repaintGrid();
+        this.placeGemOnGrid();
     }
 
 
@@ -76,7 +86,7 @@ class Game extends Component {
                 <GameStatus playerName={"Name : Jatin"} level={"Level : 1"} score={"Score : 0"} />
                 <div className="board">
                     {this.state.grid.map((cell) => {
-                        return <Cell key={`${cell.row}:${cell.col}`} />
+                        return <Cell key={`${cell.row}+${cell.col}`} gem={cell.randomGem} />
                     })}
                 </div>
             </div>
