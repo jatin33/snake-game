@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { RIGHT } from '../../utils/directions';
+import { RIGHT, UP, DOWN, LEFT } from '../../utils/directions';
 import './Game.css';
 import { ROW, COL } from '../../utils/dimensions';
 import Cell from './Cell/Cell';
@@ -24,7 +24,7 @@ class Game extends Component {
 
     gameLapse() {
         // updates game's state every 300 ms
-        // and repaint grid using 
+        // and repaint grid using repaint function
     }
 
     checkIfGameEnds() {
@@ -32,7 +32,7 @@ class Game extends Component {
         // updates the gameEnds in state
     }
 
-    repaintGrid(changedGrid) { // pass updated state variable
+    repaintGrid() { // pass updated state variable
         let { grid } = this.state;
         for (let row = 0; row < ROW; row++) {
             for (let col = 0; col < COL; col++) {
@@ -62,14 +62,32 @@ class Game extends Component {
         this.setState({ grid: grid });
     }
 
-    updateSnakeDirection() {
-        // passed to window event listener
+    updateSnakeDirection = (e) => {
+        // passed to body event listener
         // checks for which key has been pressed an updates the state accordingly
+        let { direction } = this.state;
+        switch (e.key) {
+            case UP:
+                direction = UP;
+                break;
+            case DOWN:
+                direction = DOWN;
+                break;
+            case LEFT:
+                direction = LEFT;
+                break;
+            case RIGHT:
+            default:
+                direction = RIGHT;
+                break;
+        }
+        this.setState({ direction });
     }
 
     componentDidMount() {
         // set game timers here
         // add event listeners to window here
+        document.body.addEventListener('keydown', this.updateSnakeDirection);
         this.repaintGrid();
         this.placeGemOnGrid();
     }
