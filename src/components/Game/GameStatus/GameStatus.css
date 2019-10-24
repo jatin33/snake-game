@@ -1,0 +1,17 @@
+.gameStatus {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: teal;
+    width: 600px;
+    height: 100px;
+    margin: 10px;
+}
+
+.label {
+    display:flex;
+    padding: 5px;
+    margin: 5px;
+    color: thistle;
+    font-size: 2rem;
+}
